@@ -19,10 +19,16 @@ Gem::Specification.new do |s|
   s.files = [
     'lib/apache2.caveats',
     'lib/apache2.md.erb',
+    'lib/bsd2c.md.erb',
+    'lib/bsd2c.txt.erb',
+    'lib/bsd3c.md.erb',
+    'lib/bsd3c.txt.erb',
     'lib/fdosl.md.erb',
     'lib/fdosl.txt.erb',
     'lib/mit.md.erb',
     'lib/mit.txt.erb',
+    'lib/zlib.md.erb',
+    'lib/zlib.txt.erb',
     'bin/legal-poo',
     'README.md',
     'COPYING.md' ]

@@ -12,8 +12,8 @@ Now wasn't that easy?
 ## Supported Licenses
 
 * **fdosl** Firestorm Development Open-Source License v0.1 (dual-licensing of BSD/MIT).
-* **2cbsd** 2-clause BSD
+* **bsd2c** 2-clause BSD
 * **mit** MIT
-* **3cbsd** 3-clause BSD
+* **bsd3c** 3-clause BSD
 * **apache2** Apache License 2.0
 * **zlib** ZLib/libpng license

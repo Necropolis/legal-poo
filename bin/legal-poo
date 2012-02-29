@@ -52,6 +52,43 @@ class LegalPoo < Thor
     end
   end
   
+  desc "3cbsd FORMAT YOURNAME COPYRIGHT-YEAR ORGANIZATION", "Generate a 3-clause BSD license file."
+  def bsd3c(format, copyright_holder, copyright_year, organization)
+    @copyright_owner = copyright_holder
+    @copyright_year = copyright_year
+    @copyright_org = organization
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/bsd3c.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    end
+  end
+  
+  desc "bsd2c FORMAT YOURNAME COPYRIGHT-YEAR", "Generate a 2-clause BSD license file."
+  def bsd2c(format, copyright_owner, copyright_year)
+    @copyright_owner = copyright_owner
+    @copyright_year = copyright_year
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/bsd2c.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    end
+  end
+  
+  desc "zlib FORMAT YOURNAME COPYRIGHT-YEAR", "Generate a zlib/libpng license file."
+  def zlib(format, copyright_owners, copyright_year)
+    @copyright_owners = copyright_owners
+    @copyright_year = copyright_year
+    fmt = find_format format
+    unless fmt == nil
+      txt == ERB.new(File.read("lib/zlib.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    end
+  end
+  
   private
   
   def find_format format
