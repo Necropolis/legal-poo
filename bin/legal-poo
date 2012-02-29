@@ -1,0 +1,93 @@
+#!/usr/bin/env ruby
+
+require 'rubygems' if RUBY_VERSION < '1.9'
+require 'thor'
+require 'erb'
+require 'pp'
+
+Dir.chdir File.expand_path(File.join(File.dirname(__FILE__),'..'))
+
+FORMATS = {
+  :md => ['md','mkd','markdown'],
+  :txt => ['txt', 'text', 'plaintext'],
+}
+
+class LegalPoo < Thor
+  
+  desc "fdosl FORMAT YOURNAME COPYRIGHT-DATE", "Generate an FDOSL license file."
+  def fdosl(format, copyright_holder, copyright_date)
+    @copyright_holder = copyright_holder
+    @copyright_date = copyright_date
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/fdosl.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    end
+  end
+  
+  desc "mit FORMAT YOURNAME COPYRIGHT-DATE", "Generate an MIT license file."
+  def mit(format, copyright_holder, copyright_date)
+    @copyright_holder = copyright_holder
+    @copyright_date = copyright_date
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/mit.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    end
+  end
+  
+  desc "apache2 FORMAT YOURNAME COPYRIGHT-DATE", "Generate an Apache 2.0 license file."
+  def apache2(format, copyright_holder, copyright_date)
+    @copyright_holder = copyright_holder
+    @copyright_date = copyright_date
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/apache2.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+      STDERR.puts ""
+      STDERR.puts smart_wrap(File.read("lib/apache2.caveats"))
+    end
+  end
+  
+  private
+  
+  def find_format format
+    FORMATS.each do |fmt, aliases|
+      return fmt if aliases.include? format
+    end
+    STDERR.puts "I don't understand the format #{format}"
+    STDERR.puts "\n"
+    STDERR.puts "Try one of the following:"
+    pretty_print_formats
+    return nil
+  end
+  
+  def pretty_print_formats
+    FORMATS.each do |fmt, aliases|
+      STDERR.puts "  #{fmt.to_s}"
+      while !aliases.empty?
+        STDERR.puts "    #{aliases.take(5).join(' ')}"
+        aliases=aliases.drop 5
+      end
+    end
+  end
+  
+  def smart_wrap(text, width=80)
+    text.split("\n").collect do |line|
+      word_wrap(line.strip, line.match(/^(\s*)/)[1], width)+"\n"
+    end
+  end
+  
+  # stolen from https://github.com/rails/rails/blob/196407c54f0736c275d2ad4e6f8b0ac55360ad95/actionpack/lib/action_view/helpers/text_helper.rb#L217
+  def word_wrap(text, prefix='', line_width=80)
+    text.split("\n").collect do |line|
+      line.length + prefix.length > line_width ? prefix+line.gsub(/(.{1,#{line_width-prefix.length}})(\s+|$)/, "#{prefix}\\1\n").strip : prefix+line
+    end * "\n"
+  end
+  
+end
+
+LegalPoo.start
