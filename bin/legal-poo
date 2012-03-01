@@ -3,7 +3,6 @@
 require 'rubygems' if RUBY_VERSION < '1.9'
 require 'thor'
 require 'erb'
-require 'pp'
 
 Dir.chdir File.expand_path(File.join(File.dirname(__FILE__),'..'))
 
@@ -18,35 +17,21 @@ class LegalPoo < Thor
   def fdosl(format, copyright_holder, copyright_date)
     @copyright_holder = copyright_holder
     @copyright_date = copyright_date
-    fmt = find_format format
-    unless fmt == nil
-      txt = ERB.new(File.read("lib/fdosl.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
-    end
+    emit_license format, 'fdosl'
   end
   
   desc "mit FORMAT YOURNAME COPYRIGHT-DATE", "Generate an MIT license file."
   def mit(format, copyright_holder, copyright_date)
     @copyright_holder = copyright_holder
     @copyright_date = copyright_date
-    fmt = find_format format
-    unless fmt == nil
-      txt = ERB.new(File.read("lib/mit.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
-    end
+    emit_license format, 'mit'
   end
   
   desc "apache2 FORMAT YOURNAME COPYRIGHT-DATE", "Generate an Apache 2.0 license file."
   def apache2(format, copyright_holder, copyright_date)
     @copyright_holder = copyright_holder
     @copyright_date = copyright_date
-    fmt = find_format format
-    unless fmt == nil
-      txt = ERB.new(File.read("lib/apache2.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
+    if emit_license format, 'apache2'
       STDERR.puts ""
       STDERR.puts smart_wrap(File.read("lib/apache2.caveats"))
     end
@@ -57,39 +42,55 @@ class LegalPoo < Thor
     @copyright_owner = copyright_holder
     @copyright_year = copyright_year
     @copyright_org = organization
-    fmt = find_format format
-    unless fmt == nil
-      txt = ERB.new(File.read("lib/bsd3c.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
-    end
+    emit_license format, 'bsd3c'
   end
   
   desc "bsd2c FORMAT YOURNAME COPYRIGHT-YEAR", "Generate a 2-clause BSD license file."
   def bsd2c(format, copyright_owner, copyright_year)
     @copyright_owner = copyright_owner
     @copyright_year = copyright_year
-    fmt = find_format format
-    unless fmt == nil
-      txt = ERB.new(File.read("lib/bsd2c.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
-    end
+    emit_license format, 'bsd2c'
   end
   
   desc "zlib FORMAT YOURNAME COPYRIGHT-YEAR", "Generate a zlib/libpng license file."
   def zlib(format, copyright_owners, copyright_year)
     @copyright_owners = copyright_owners
     @copyright_year = copyright_year
-    fmt = find_format format
-    unless fmt == nil
-      txt == ERB.new(File.read("lib/zlib.#{fmt.to_s}.erb")).result(binding)
-      txt = smart_wrap txt if fmt == :txt
-      print txt
+    emit_license format, 'zlib'
+  end
+  
+  desc "cdl FORMAT YOURNAME ORGANIZATION COPYRIGHT-YEAR", "Generate a Chicken Dance license file."
+  def cdl(format, copyright_owner, copyright_organization, copyright_year)
+    @copyright_owner = copyright_owner
+    @copyright_organization = copyright_organization
+    @copyright_year = copyright_year
+    if emit_license format, 'cdl'
+      STDERR.puts ""
+      STDERR.puts smart_wrap(File.read('lib/cdl.caveats'))
+    end
+  end
+  
+  desc "cdl_dance FORMAT", "Generate a Chicken Dance License dance file."
+  def cdl_dance(format)
+    if emit_license format, 'cdl-dance'
+      STDERR.puts ""
+      STDERR.puts smart_wrap(File.read('lib/cdl.caveats'))
     end
   end
   
   private
+  
+  def emit_license format, file
+    fmt = find_format format
+    unless fmt == nil
+      txt = ERB.new(File.read("lib/#{file}.#{fmt.to_s}.erb")).result(binding)
+      txt = smart_wrap txt if fmt == :txt
+      print txt
+    else
+      return false
+    end
+    true
+  end
   
   def find_format format
     FORMATS.each do |fmt, aliases|

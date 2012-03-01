@@ -17,3 +17,4 @@ Now wasn't that easy?
 * **bsd3c** 3-clause BSD
 * **apache2** Apache License 2.0
 * **zlib** ZLib/libpng license
+* **cdl** and **cdl_dance** Chicken Dance license v0.2
