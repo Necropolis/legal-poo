@@ -115,7 +115,20 @@ class LegalPoo < Thor
   
   def smart_wrap(text, width=80)
     text.split("\n").collect do |line|
-      word_wrap(line.strip, line.match(/^(\s*)/)[1], width)+"\n"
+      # oh my gosh this is ugly, but the hanging indent is so cool!
+      if line.match /^\s*(\*|\d+[\.\)])/
+        (word_wrap(line.strip, ' '*line.match(/^(\s*(?:\*|\d+[\.\)])\s?)/)[1].length, width)+"\n").split("\n").collect do |l|
+          if l.match /^\s*(\*|\d+[\.\)])/
+            l
+          else
+            (' '*line.match(/^\s*(\*|\d+[\.\)]\s?)/)[1].length)+l
+          end
+        end * "\n" + "\n"
+      elsif line.match /^\s?$/
+        "\n"
+      else
+        word_wrap(line.strip, line.match(/^(\s*)/)[1], width)+"\n"
+      end
     end
   end
   
