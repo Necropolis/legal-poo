@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.name =                        'legal-poo'
-  s.version =                     '0.0.1'
+  s.version =                     '0.0.2'
   s.summary =                     'Crap out license text like a boss.'
   s.description =                 'Legal poo makes it easier to generate legal text for copyrighting and licensing your work.'
   
@@ -30,6 +30,8 @@ Gem::Specification.new do |s|
     'lib/cdl.txt.erb',
     'lib/fdosl.md.erb',
     'lib/fdosl.txt.erb',
+    'lib/isc.md.erb',
+    'lib/isc.txt.erb',
     'lib/mit.md.erb',
     'lib/mit.txt.erb',
     'lib/zlib.md.erb',
