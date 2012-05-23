@@ -78,6 +78,14 @@ class LegalPoo < Thor
     end
   end
   
+  desc 'isc FORMAT YOURNAME COPYRIGHT-YEAR EMAIL', 'Generate an ISC license file.'
+  def isc(format, copyright_owner, copyright_year, email)
+    @copyright_year = copyright_year
+    @name = copyright_owner
+    @email = email
+    emit_license format, 'isc'
+  end
+
   private
   
   def emit_license format, file
