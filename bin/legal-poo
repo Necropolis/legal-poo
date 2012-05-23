@@ -93,7 +93,7 @@ class LegalPoo < Thor
     unless fmt == nil
       txt = ERB.new(File.read("lib/#{file}.#{fmt.to_s}.erb")).result(binding)
       txt = smart_wrap txt if fmt == :txt
-      print txt
+      print txt.join('')
     else
       return false
     end

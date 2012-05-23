@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.platform = Gem::Platform::RUBY
   s.name =                        'legal-poo'
-  s.version =                     '0.0.2'
+  s.version =                     '0.0.3'
   s.summary =                     'Crap out license text like a boss.'
   s.description =                 'Legal poo makes it easier to generate legal text for copyrighting and licensing your work.'
   
